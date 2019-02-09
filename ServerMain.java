@@ -32,8 +32,7 @@ class ServerMain {
                             e.printStackTrace();
                         }
                     }
-                };
-                t.start();
+                }; t.start();
             }
 
         } catch (IOException e) {
