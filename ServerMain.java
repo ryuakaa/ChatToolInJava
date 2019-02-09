@@ -1,8 +1,6 @@
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
 
 class ServerMain {
 
@@ -15,7 +13,7 @@ class ServerMain {
             // initialize Server
             ServerSocket serverSocket = new ServerSocket(port);
             System.out.println("Waiting for clients...");
-            
+
             // server runs until killed
             while (true) {
                 Socket clientSocket = serverSocket.accept();
@@ -24,7 +22,7 @@ class ServerMain {
                 // create new thread for every connection
                 ServerWorker worker = new ServerWorker(clientSocket);
                 worker.start();
-                
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -32,5 +30,4 @@ class ServerMain {
 
     }
 
-    
 }
