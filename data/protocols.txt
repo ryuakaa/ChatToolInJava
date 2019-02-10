@@ -14,7 +14,13 @@ User & Server
     * direct messages
     * broadcast messages
 
+# topic -> chatroom
 
 Commands:
     login <username> <password>
     logoff 
+    quit
+    msg <user> body
+    join #topic
+    leave #topic
+    msg #topic body

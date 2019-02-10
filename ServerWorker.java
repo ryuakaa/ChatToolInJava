@@ -4,15 +4,21 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.HashSet;
 import java.util.List;
+
+import com.sun.xml.internal.ws.resources.HandlerMessages;
+
+import jdk.nashorn.internal.parser.Token;
 
 public class ServerWorker extends Thread {
 
     private final Socket clientSocket;
-    private String login = null;
     private final Server server;
+    private String login = null;
     private InputStream inputStream;
     private OutputStream outputStream;
+    private HashSet<String> topicSet = new HashSet<>();
 
     private String welcomeMsg = nl + "<////> Hello Client <////>\n" + nl + "> Commands are:" + nl
             + "--> login <username> <password>" + nl + "--> logoff" + nl + "--> quit" + nl + nl;
@@ -66,6 +72,14 @@ public class ServerWorker extends Thread {
                 } else if ("login".equalsIgnoreCase(cmd)) {
                     // try to login
                     handleLogin(outputStream, tokens);
+                } else if ("msg".equalsIgnoreCase(cmd)) {
+                    // split only first two
+                    String[] tokensMsg = line.split(" ", 3);
+                    handleMessage(tokensMsg);
+                } else if ("join".equalsIgnoreCase(cmd)) {
+                    handleJoin(tokens);
+                } else if ("leave".equalsIgnoreCase(cmd)) {
+                    handleLeave(tokens);
                 } else {
                     String msg = "> Unknown: " + cmd + nl;
                     outputStream.write(msg.getBytes());
@@ -75,11 +89,56 @@ public class ServerWorker extends Thread {
         clientSocket.close();
     }
 
+    private void handleLeave(String[] tokens) {
+        // leave a topic
+        if (tokens.length > 1) {
+            String topic = tokens[1];
+            topicSet.remove(topic);
+        }
+    }
+
+    private boolean isMemberOfTopic(String topic) {
+        return topicSet.contains(topic);
+    }
+
+    private void handleJoin(String[] tokens) {
+        // join a topic
+        if (tokens.length > 1) {
+            String topic = tokens[1];
+            topicSet.add(topic);
+        }
+    }
+
+    // format: msg login body
+    // format: msg topic body
+    private void handleMessage(String[] tokens) throws IOException {
+        // send messages
+        String sendTo = tokens[1];
+        String body = tokens[2];
+
+        boolean isTopic = sendTo.charAt(0) == '#';
+
+        // send to worker which matches the sendTo
+        List<ServerWorker> workerList = server.getWorkerList();
+        for (ServerWorker worker : workerList) {
+            if (isTopic) {
+                if (worker.isMemberOfTopic(sendTo)) {
+                    String outMsg = "> msg " + sendTo + ":" + login + "> " + body + nl;
+                    worker.send(outMsg);
+                }
+            } else if (sendTo.equalsIgnoreCase(worker.getLogin())) {
+                String outMsg = login + "> " + body + nl;
+                worker.send(outMsg);
+            }
+        }
+    }
+
     private void handleLogoff() throws IOException {
         // logoff user
+        server.removeWorker(this);
         List<ServerWorker> workerList = server.getWorkerList();
         // send other online users current status
-        String onlineMsg = "> -" + login + " left" + nl;
+        String onlineMsg = "> - " + login + " went offline" + nl;
         for (ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
                 worker.send(onlineMsg);
@@ -117,7 +176,7 @@ public class ServerWorker extends Thread {
                     }
                 }
                 // send other online users current status
-                String onlineMsg = "> +" + login + " joined" + nl;
+                String onlineMsg = "> + " + login + " is now online" + nl;
                 for (ServerWorker worker : workerList) {
                     if (!login.equals(worker.getLogin())) {
                         worker.send(onlineMsg);
