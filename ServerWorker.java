@@ -57,7 +57,6 @@ public class ServerWorker extends Thread {
 
         // connection as long as client wants
         while ((line = reader.readLine()) != null) {
-
             // split input from client
             String[] tokens = line.split(" ");
             if (tokens != null && tokens.length > 0) {
@@ -136,7 +135,7 @@ public class ServerWorker extends Thread {
         server.removeWorker(this);
         List<ServerWorker> workerList = server.getWorkerList();
         // send other online users current status
-        String onlineMsg = "> - " + login + " went offline" + nl;
+        String onlineMsg = "offline " + login + nl;
         for (ServerWorker worker : workerList) {
             if (!login.equals(worker.getLogin())) {
                 worker.send(onlineMsg);
@@ -150,6 +149,7 @@ public class ServerWorker extends Thread {
         if (tokens.length == 3) {
             String login = tokens[1];
             String password = tokens[2];
+
             // check acc
             if ((login.equalsIgnoreCase("tom") && password.equals("tom"))
                     || (login.equalsIgnoreCase("tim") && password.equals("tim"))) {
@@ -168,13 +168,13 @@ public class ServerWorker extends Thread {
                     // no msgs of yourself being online
                     if (worker.getLogin() != null) {
                         if (!login.equals(worker.getLogin())) {
-                            String msg2 = "> " + worker.getLogin() + " is online" + nl;
+                            String msg2 = "online " + worker.getLogin() + nl;
                             send(msg2);
                         }
                     }
                 }
                 // send other online users current status
-                String onlineMsg = "> + " + login + " is now online" + nl;
+                String onlineMsg = "online " + login + nl;
                 for (ServerWorker worker : workerList) {
                     if (!login.equals(worker.getLogin())) {
                         worker.send(onlineMsg);
