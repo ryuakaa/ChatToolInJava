@@ -1,5 +1,7 @@
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -11,6 +13,7 @@ public class Client {
     private Socket socket;
     private OutputStream serverOut;
     private InputStream serverIn;
+    private BufferedReader bufferedIn;
 
     public Client(String serverName, int serverPort) {
         this.serverName = serverName;
@@ -24,13 +27,27 @@ public class Client {
             System.err.println("Connection failed");
         } else {
             System.out.println("Connection successful");
-            client.login("tim", "tim");
+            if (client.login("tim", "tim")) {
+                // successfully logged in
+                System.out.println("Login successful");
+            } else {
+                System.err.println("Login failed");
+            }
         }
     }
 
-    private void login(String login, String password) throws IOException {
+    private boolean login(String login, String password) throws IOException {
         String cmd = "login " + login + " " + password + nl;
-        serverOut.write(cmd.getBytes(cmd));
+        serverOut.write(cmd.getBytes());
+
+        String response = bufferedIn.readLine();
+        // System.out.println("Response: " + response);
+
+        if ("valid login".equalsIgnoreCase(response)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean connect() throws IOException {
@@ -40,6 +57,7 @@ public class Client {
             System.out.println("Client port is " + socket.getLocalPort());
             this.serverOut = socket.getOutputStream();
             this.serverIn = socket.getInputStream();
+            this.bufferedIn = new BufferedReader(new InputStreamReader(serverIn));
             return true;
         } catch (UnknownHostException e) {
             e.printStackTrace();

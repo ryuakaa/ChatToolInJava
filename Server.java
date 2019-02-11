@@ -19,9 +19,10 @@ public class Server extends Thread {
 
     @Override
     public void run() {
+        ServerSocket serverSocket = null;
         try {
             // initialize Server
-            ServerSocket serverSocket = new ServerSocket(serverPort);
+            serverSocket = new ServerSocket(serverPort);
             System.out.println("Waiting for clients...");
 
             // server runs until killed
@@ -36,6 +37,14 @@ public class Server extends Thread {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (serverSocket != null) {
+                    serverSocket.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

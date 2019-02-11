@@ -16,8 +16,10 @@ public class ServerWorker extends Thread {
     private OutputStream outputStream;
     private HashSet<String> topicSet = new HashSet<>();
 
-    private String welcomeMsg = nl + "<////> Hello Client <////>\n" + nl + "> Commands are:" + nl
-            + "--> login <username> <password>" + nl + "--> logoff" + nl + "--> quit" + nl + nl;
+    // private String welcomeMsg = nl + "<////> Hello Client <////>\n" + nl + ">
+    // Commands are:" + nl
+    // + "--> login <username> <password>" + nl + "--> logoff" + nl + "--> quit" +
+    // nl + nl;
 
     public ServerWorker(Server server, Socket clientSocket) {
         this.server = server;
@@ -51,7 +53,7 @@ public class ServerWorker extends Thread {
         String line;
 
         // Standard message from server
-        outputStream.write(welcomeMsg.getBytes());
+        // outputStream.write(welcomeMsg.getBytes());
 
         // connection as long as client wants
         while ((line = reader.readLine()) != null) {
@@ -153,7 +155,7 @@ public class ServerWorker extends Thread {
                     || (login.equalsIgnoreCase("tim") && password.equals("tim"))) {
 
                 // valid login
-                String msg = "> Login successful!" + nl;
+                String msg = "valid login" + nl;
                 outputStream.write(msg.getBytes());
                 this.login = login;
                 // Server output
@@ -180,7 +182,7 @@ public class ServerWorker extends Thread {
                 }
 
             } else {
-                String msg = "> Login failed!" + nl;
+                String msg = "bad login" + nl;
                 outputStream.write(msg.getBytes());
                 System.err.println("Login failed for " + login);
             }
