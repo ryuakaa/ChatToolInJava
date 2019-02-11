@@ -71,7 +71,7 @@ public class ServerWorker extends Thread {
                 } else if ("leave".equalsIgnoreCase(cmd)) {
                     handleLeave(tokens);
                 } else {
-                    String msg = "> Unknown: " + cmd + nl;
+                    String msg = "Unknown: " + cmd + nl;
                     outputStream.write(msg.getBytes());
                 }
             }
@@ -113,7 +113,7 @@ public class ServerWorker extends Thread {
         for (ServerWorker worker : workerList) {
             if (isTopic) {
                 if (worker.isMemberOfTopic(sendTo)) {
-                    String outMsg = "> msg " + sendTo + ":" + login + "> " + body + nl;
+                    String outMsg = "msg " + sendTo + ":" + login + "> " + body + nl;
                     worker.send(outMsg);
                 }
             } else if (sendTo.equalsIgnoreCase(worker.getLogin())) {

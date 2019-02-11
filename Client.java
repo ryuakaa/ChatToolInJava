@@ -18,6 +18,7 @@ public class Client {
     private BufferedReader bufferedIn;
 
     private ArrayList<UserStatusListener> userStatusListeners = new ArrayList<>();
+    private ArrayList<MessageListener> messageListeners = new ArrayList<>();
 
     public Client(String serverName, int serverPort) {
         this.serverName = serverName;
@@ -48,12 +49,19 @@ public class Client {
             if (client.login("tim", "tim")) {
                 // successfully logged in
                 System.out.println("Login successful");
+
+                client.msg("tom", "hi");
             } else {
                 System.err.println("Login failed");
             }
 
             client.logoff();
         }
+    }
+
+    private void msg(String sendTo, String msgBody) throws IOException {
+        String cmd = "msg " + sendTo + " " + msgBody + nl;
+        serverOut.write(cmd.getBytes());
     }
 
     private boolean login(String login, String password) throws IOException {
@@ -150,6 +158,14 @@ public class Client {
 
     public void removeUserStatusListener(UserStatusListener listener) {
         userStatusListeners.remove(listener);
+    }
+
+    public void addMessageListener(MessageListener listener) {
+        messageListeners.add(listener);
+    }
+
+    public void removeMessageListener(MessageListener listener) {
+        messageListeners.remove(listener);
     }
 
     // because \n doesn't work properly dnw
