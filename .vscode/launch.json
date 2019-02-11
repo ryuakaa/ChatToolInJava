@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - LoginWindow",
+            "request": "launch",
+            "mainClass": "LoginWindow",
+            "projectName": "java_80ac4037"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - UserListPane",
             "request": "launch",
             "mainClass": "UserListPane",

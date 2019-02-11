@@ -76,7 +76,6 @@ public class Client {
         serverOut.write(cmd.getBytes());
 
         String response = bufferedIn.readLine();
-        // System.out.println("Response: " + response);
 
         if ("valid login".equalsIgnoreCase(response)) {
             // logged in
