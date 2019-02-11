@@ -18,11 +18,6 @@ public class ServerWorker extends Thread {
     private OutputStream outputStream;
     private HashSet<String> topicSet = new HashSet<>();
 
-    // private String welcomeMsg = nl + "<////> Hello Client <////>\n" + nl + ">
-    // Commands are:" + nl
-    // + "--> login <username> <password>" + nl + "--> logoff" + nl + "--> quit" +
-    // nl + nl;
-
     public ServerWorker(Server server, Socket clientSocket) {
         this.server = server;
         this.clientSocket = clientSocket;
@@ -53,9 +48,6 @@ public class ServerWorker extends Thread {
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line;
-
-        // Standard message from server
-        // outputStream.write(welcomeMsg.getBytes());
 
         // connection as long as client wants
         while ((line = reader.readLine()) != null) {
