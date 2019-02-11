@@ -1,3 +1,4 @@
+package Server;
 
 class ServerMain {
 
