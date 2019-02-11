@@ -28,6 +28,7 @@ public class Client {
     public static void main(String[] args) throws IOException {
 
         Client client = new Client("localhost", 4222);
+
         // add Listener for on and offline messages
         client.addUserStatusListener(new UserStatusListener() {
             @Override
@@ -40,6 +41,13 @@ public class Client {
                 System.out.println("OFFLINE: " + login);
             }
         });
+        // adds Listeners for messages
+        client.addMessageListener(new MessageListener() {
+            @Override
+            public void onMessage(String fromLogin, String msgBody) {
+                System.out.println("[" + fromLogin + "] " + msgBody);
+            }
+        });
 
         // set up connection and log in
         if (!client.connect()) {
@@ -50,12 +58,11 @@ public class Client {
                 // successfully logged in
                 System.out.println("Login successful");
 
-                client.msg("tom", "hi");
+                // client.msg("tom", "hi");
             } else {
                 System.err.println("Login failed");
             }
-
-            client.logoff();
+            // client.logoff();
         }
     }
 
@@ -81,7 +88,7 @@ public class Client {
     }
 
     private void logoff() throws IOException {
-        String cmd = "logoff " + nl;
+        String cmd = "logoff" + nl;
         serverOut.write(cmd.getBytes());
     }
 
@@ -102,12 +109,15 @@ public class Client {
             while ((line = bufferedIn.readLine()) != null) {
                 String[] tokens = line.split(" ");
                 if (tokens != null && tokens.length > 0) {
-
                     String cmd = tokens[0];
                     if ("online".equalsIgnoreCase(cmd)) {
                         handleOnline(tokens);
                     } else if ("offline".equalsIgnoreCase(cmd)) {
                         handleOffline(tokens);
+                    } else if ("msg".equalsIgnoreCase(cmd)) {
+                        // split only first two
+                        String[] tokensMsg = line.split(" ", 3);
+                        handleMessage(tokensMsg);
                     }
                 }
             }
@@ -118,6 +128,15 @@ public class Client {
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
+        }
+    }
+
+    private void handleMessage(String[] tokensMsg) {
+        String login = tokensMsg[1];
+        String msgBody = tokensMsg[2];
+
+        for (MessageListener listener : messageListeners) {
+            listener.onMessage(login, msgBody);
         }
     }
 

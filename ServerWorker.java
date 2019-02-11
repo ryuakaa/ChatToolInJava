@@ -117,7 +117,7 @@ public class ServerWorker extends Thread {
                     worker.send(outMsg);
                 }
             } else if (sendTo.equalsIgnoreCase(worker.getLogin())) {
-                String outMsg = login + "> " + body + nl;
+                String outMsg = "msg " + login + " " + body + nl;
                 worker.send(outMsg);
             }
         }
