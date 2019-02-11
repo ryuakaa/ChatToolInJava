@@ -27,13 +27,12 @@ public class Server extends Thread {
             // server runs until killed
             while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("Accepted connection from " + clientSocket.getLocalSocketAddress());
+                System.out.println("Accepted connection from " + clientSocket);
 
                 // create new thread for every connection
                 ServerWorker worker = new ServerWorker(this, clientSocket);
                 workerList.add(worker);
                 worker.start();
-
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Client",
+            "request": "launch",
+            "mainClass": "Client",
+            "projectName": "java_80ac4037"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - ServerMain",
             "request": "launch",
             "mainClass": "ServerMain",

@@ -7,10 +7,6 @@ import java.net.Socket;
 import java.util.HashSet;
 import java.util.List;
 
-import com.sun.xml.internal.ws.resources.HandlerMessages;
-
-import jdk.nashorn.internal.parser.Token;
-
 public class ServerWorker extends Thread {
 
     private final Socket clientSocket;
@@ -186,6 +182,7 @@ public class ServerWorker extends Thread {
             } else {
                 String msg = "> Login failed!" + nl;
                 outputStream.write(msg.getBytes());
+                System.err.println("Login failed for " + login);
             }
         }
     }
