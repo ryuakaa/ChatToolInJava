@@ -160,10 +160,10 @@ public class ServerWorker extends Thread {
                 for (ServerWorker worker : workerList) {
                     // no msgs of yourself being online
                     if (worker.getLogin() != null) {
-                        if (!login.equals(worker.getLogin())) {
-                            String msg2 = "online " + worker.getLogin() + nl;
-                            send(msg2);
-                        }
+                        // if (!login.equals(worker.getLogin())) {
+                        String msg2 = "online " + worker.getLogin() + nl;
+                        send(msg2);
+                        // }
                     }
                 }
                 // send other online users current status

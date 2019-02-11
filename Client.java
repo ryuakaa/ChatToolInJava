@@ -66,12 +66,12 @@ public class Client {
         }
     }
 
-    private void msg(String sendTo, String msgBody) throws IOException {
+    public void msg(String sendTo, String msgBody) throws IOException {
         String cmd = "msg " + sendTo + " " + msgBody + nl;
         serverOut.write(cmd.getBytes());
     }
 
-    private boolean login(String login, String password) throws IOException {
+    public boolean login(String login, String password) throws IOException {
         String cmd = "login " + login + " " + password + nl;
         serverOut.write(cmd.getBytes());
 
@@ -87,7 +87,7 @@ public class Client {
         }
     }
 
-    private void logoff() throws IOException {
+    public void logoff() throws IOException {
         String cmd = "logoff" + nl;
         serverOut.write(cmd.getBytes());
     }
@@ -154,7 +154,7 @@ public class Client {
         }
     }
 
-    private boolean connect() throws IOException {
+    public boolean connect() throws IOException {
         try {
             // connect to server
             this.socket = new Socket(serverName, serverPort);
